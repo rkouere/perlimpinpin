@@ -24,7 +24,7 @@ public class RicartAgrawala extends Algorithm {
     // To display the state
     private boolean want = false;
     private boolean in = false;
-
+    private int ticket = 1;
     // Critical section thread
     private ReceptionRules rr = null;
     // State display frame
@@ -51,7 +51,7 @@ public class RicartAgrawala extends Algorithm {
     public void init() {
         procId = getId();
         Random rand = new Random(procId);
-        putProperty("label", neutre);
+        putProperty("label", neutre+","+this.ticket);
 
         t = 0;
         t_prime = 0;
@@ -79,7 +79,7 @@ public class RicartAgrawala extends Algorithm {
 
             // Try to access critical section
             askForCritical();
-            putProperty("label", critique);
+            putProperty("label", critique+","+this.ticket);
 
             // Access critical
             want = false;
@@ -110,10 +110,11 @@ public class RicartAgrawala extends Algorithm {
         want = true;
         t_prime = t + 1;
         nbProcs = getArity();
-        putProperty("label", demande);
+        putProperty("label", demande+","+this.ticket);
         REQMessage msg = new REQMessage(t_prime);
         sendAll(msg);
-        System.out.println(procId + " - Ask for critical to all");
+        System.out.println(procId + " - Ask for critical to all with this ticket : "+this.ticket);
+        this.ticket+=1;
         while (nbProcs != 0) {
             displayState();
             try {
@@ -154,7 +155,7 @@ public class RicartAgrawala extends Algorithm {
         }
         a.clear();
         displayState();
-        putProperty("label", neutre);
+        putProperty("label", neutre+","+this.ticket);
 
     }
 
